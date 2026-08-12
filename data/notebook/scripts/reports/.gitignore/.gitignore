@@ -1,0 +1,19 @@
+# Ambientes virtuais
+venv/
+.venv/
+env/
+
+# Arquivos temporários do Python e Jupyter
+__pycache__/
+.ipynb_checkpoints/
+
+# Dados pesados ou confidenciais (evita estourar o limite de 100MB do GitHub)
+data/raw/*
+*.csv
+*.xlsx
+*.parquet
+
+# Arquivos temporários do LaTeX (caso use)
+*.aux
+*.log
+*.synctex.gz
