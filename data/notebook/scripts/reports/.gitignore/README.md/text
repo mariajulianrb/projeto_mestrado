@@ -1,0 +1,8 @@
+meu-mestrado/
+├── data/              # Dados brutos e processados (dados sensíveis/pesados ficam fora do Git)
+├── notebooks/         # Análises exploratórias (.ipynb)
+├── src/               # Funções e scripts Python reaproveitáveis (.py)
+├── reports/           # Relatórios, figuras salvas, apresentações ou arquivo .tex da dissertação
+├── .gitignore         # Lista de arquivos/pastas que o Git NÃO deve rastrear
+├── README.md          # Resumo da pesquisa, objetivos e como executar o projeto
+└── requirements.txt   # Lista de bibliotecas Python usadas no projeto
