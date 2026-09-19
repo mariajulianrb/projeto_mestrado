@@ -29,3 +29,4 @@ data/
 # Arquivos gerados pelo Sistema Operacional
 .DS_Store
 Thumbs.db
+.venv/
