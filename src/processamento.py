@@ -27,3 +27,26 @@ def subtrair_fundo(arquivo_src, arquivo_bkg, raio_src, raio_bkg, arquivo_saida):
 
     lc_clean.write(arquivo_saida, format='fits', overwrite=True)
     print(f"Sucesso! Ficheiro corrigido salvo em: {arquivo_saida}\n")
+
+import pandas as pd
+
+def calcular_fase_orbital(tabela_astropy, t0=57629.250, p=3.90603, mjd_base=55197.00076601852):
+    """
+    Converte o tempo de uma tabela NuSTAR para MJD, calcula a fase orbital 
+    e duplica os dados para visualização de dois ciclos completos.
+    """
+    df = tabela_astropy.to_pandas()
+    
+    # Filtra contagens negativas
+    df = df[df['RATE'] > 0].copy()
+    
+    # Conversão para MJD e Fase
+    df['MJD'] = mjd_base + (df['TIME'] / 86400.0)
+    df['FASE'] = ((df['MJD'] - t0) / p) % 1.0
+    
+    # Ordenação e duplicação para 2 ciclos
+    df = df.sort_values(by='FASE')
+    df_ciclo2 = df.copy()
+    df_ciclo2['FASE'] = df_ciclo2['FASE'] + 1.0
+    
+    return pd.concat([df, df_ciclo2])
