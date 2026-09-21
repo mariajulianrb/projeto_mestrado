@@ -2,7 +2,7 @@ import numpy as np
 from astropy.timeseries import LombScargle
 
 def calcular_lomb_scargle(time, rate, error=None, min_p=0.05, max_p=5.0):
-    """Calcula o periodograma em dias (para sinais lentos e órbitas)."""
+    """Calcula o periodograma em dias """
     mask = (rate > 0) & ~np.isnan(rate)
     t_dias = time[mask] / 86400.0
     r_valid = rate[mask]
@@ -17,7 +17,7 @@ def calcular_lomb_scargle(time, rate, error=None, min_p=0.05, max_p=5.0):
     return freq, power, freq[idx_pico], 1.0 / freq[idx_pico]
 
 def calcular_lomb_scargle_hz(time, rate, error=None, min_p_seg=1.0, max_p_seg=3600.0):
-    """Calcula o periodograma em Hertz (para pulsações rápidas)."""
+    """Calcula o periodograma em Hz"""
     mask = (rate > 0) & ~np.isnan(rate)
     t_segundos = time[mask] 
     r_valid = rate[mask]
