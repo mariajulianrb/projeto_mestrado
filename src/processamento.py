@@ -37,14 +37,11 @@ def calcular_fase_orbital(tabela_astropy, t0=57629.250, p=3.90603, mjd_base=5519
     """
     df = tabela_astropy.to_pandas()
     
-    # Filtra contagens negativas
     df = df[df['RATE'] > 0].copy()
     
-    # Conversão para MJD e Fase
     df['MJD'] = mjd_base + (df['TIME'] / 86400.0)
     df['FASE'] = ((df['MJD'] - t0) / p) % 1.0
     
-    # Ordenação e duplicação para 2 ciclos
     df = df.sort_values(by='FASE')
     df_ciclo2 = df.copy()
     df_ciclo2['FASE'] = df_ciclo2['FASE'] + 1.0
