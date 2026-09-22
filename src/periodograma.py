@@ -41,14 +41,13 @@ def calcular_periodograma_medio_gti(
     Fatia a curva de luz em blocos orbitais (GTIs) considerando lacunas maiores que
     `limite_gap_seg`. Calcula o PDS médio (Welch-like) e extrai metadados dos blocos.
     """
-    # 1. Identifica quebras temporais na grade temporal original
+    
     dt = np.diff(time)
     quebras = np.where(dt > limite_gap_seg)[0]
     
     indices_inicio = np.insert(quebras + 1, 0, 0)
     indices_fim = np.append(quebras, len(time) - 1)
     
-    # 2. Grade comum de frequências em Hz
     f_min, f_max = 1.0 / max_p_seg, 1.0 / min_p_seg
     freq_grid = np.linspace(f_min, f_max, n_freqs)
     
@@ -56,13 +55,11 @@ def calcular_periodograma_medio_gti(
     info_gtis = []
     gti_count = 1
     
-    # 3. Processa cada segmento contínuo
     for start, end in zip(indices_inicio, indices_fim):
         t_seg = time[start:end + 1]
         r_seg = rate[start:end + 1]
         e_seg = error[start:end + 1] if error is not None else None
         
-        # Filtra pontos válidos dentro do bloco
         mask_seg = (r_seg > 0) & ~np.isnan(r_seg)
         
         if np.sum(mask_seg) < min_pontos:
@@ -71,8 +68,8 @@ def calcular_periodograma_medio_gti(
         t_val = t_seg[mask_seg]
         r_val = r_seg[mask_seg]
         e_val = e_seg[mask_seg] if e_seg is not None else None
+
         
-        # Registra metadados do bloco
         info_gtis.append({
             'GTI': gti_count,
             'T_Start': t_val[0],
@@ -81,8 +78,7 @@ def calcular_periodograma_medio_gti(
             'N_Pontos': len(t_val)
         })
         gti_count += 1
-        
-        # Periodograma do bloco
+
         ls = LombScargle(t_val, r_val, e_val)
         power = ls.power(freq_grid)
         powers_list.append(power)
@@ -120,3 +116,4 @@ def filtrar_periodograma(freq, power, f_min_excluida, f_max_excluida):
     
     idx_pico = np.argmax(power_limpa)
     return freq_limpa, power_limpa, freq_limpa[idx_pico], 1.0 / freq_limpa[idx_pico]
+
