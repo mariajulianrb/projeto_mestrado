@@ -8,7 +8,7 @@ def subtrair_fundo(arquivo_src, arquivo_bkg, raio_src, raio_bkg, arquivo_saida):
     bkg = Table.read(arquivo_bkg, hdu=1)
 
     a = (raio_src ** 2) / (raio_bkg ** 2)
-    print(f"Fator de escala de área (a) calculado: {a:.4f}")
+    print(f"Fator de escala de área: {a:.4f}")
 
     rate_sub = src['RATE'] - (a * bkg['RATE'])
     err_sub = np.sqrt(src['ERROR'] ** 2 + (a * bkg['ERROR']) ** 2)
