@@ -22,6 +22,7 @@ def subtrair_fundo(arquivo_src, arquivo_bkg, raio_src, raio_bkg, arquivo_saida):
 
 
 def calcular_fase_orbital(tabela_astropy, t0=57629.250, p=3.90603, mjd_base=55197.00076601852):
+    # t0 Yoneda2020
 
     df = tabela_astropy.to_pandas()
     
