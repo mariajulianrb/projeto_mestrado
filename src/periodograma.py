@@ -4,9 +4,7 @@ from scipy.stats import chi2
 
 
 def extrair_segmentos_gti(time, rate, err=None, limite_gap_seg=600, min_pontos=30):
-    """
-    Fatia a curva de luz em blocos orbitais (GTIs) com base nas lacunas temporais.
-    """
+    
     dt = np.diff(time)
     quebras = np.where(dt > limite_gap_seg)[0]
     
@@ -35,13 +33,10 @@ def extrair_segmentos_gti(time, rate, err=None, limite_gap_seg=600, min_pontos=3
 
 def analisar_abordagem_a_global(
     time, rate, error=None, 
-    min_p_seg=20.0, max_p_seg=120.0, 
-    n_freqs=10000, faps=[0.01, 0.001]
+    min_p_seg=2.0, max_p_seg=120.0, 
+    n_freqs=1000, faps=[0.01, 0.001]
 ):
-    """
-    Calcula o Lomb-Scargle em TODA a curva de luz (preservando a baseline total T).
-    Utiliza o método de Baluev para o cálculo exato da FAP.
-    """
+    
     mask = ~np.isnan(time) & ~np.isnan(rate)
     if error is not None:
         mask &= ~np.isnan(error) & (error > 0)
@@ -79,9 +74,9 @@ def analisar_abordagem_b_medio(
     rate,
     error=None,
     limite_gap_seg=600,
-    min_p_seg=120.0,
-    max_p_seg=1800.0,
-    n_freqs=10000,
+    min_p_seg=2.0,
+    max_p_seg=120.0,
+    n_freqs=1000,
     min_pontos=30,
     faps=[0.01, 0.001],
 ):
@@ -98,7 +93,7 @@ def analisar_abordagem_b_medio(
 
     powers_list = []
     duracoes_gti = []
-    info_gtis = []  # <--- Adicionado para salvar as informações dos GTIs
+    info_gtis = []  
 
     for i, (t_seg, r_seg, e_seg) in enumerate(segmentos):
         if np.std(r_seg) == 0:
@@ -111,7 +106,6 @@ def analisar_abordagem_b_medio(
             powers_list.append(power)
             duracoes_gti.append(t_seg[-1] - t_seg[0])
 
-            # Registra informações do GTI para a tabela
             info_gtis.append({
                 "GTI": i + 1,
                 "T_Start": t_seg[0],
@@ -144,14 +138,12 @@ def analisar_abordagem_b_medio(
         "best_power": power_medio[idx_pico],
         "n_segmentos": M_efetivo,
         "limiares_fap": limiares_fap,
-        "info_gtis": info_gtis,  # <--- Retornado no dicionário
+        "info_gtis": info_gtis, 
     }
 
 
-def calcular_funcao_janela(time, rate=None, min_p_seg=20.0, max_p_seg=120.0, n_freqs=10000):
-    """
-    Calcula a Window Function (resposta de amostragem) para identificar aliasing orbital.
-    """
+def funcao_janela(time, rate=None, min_p_seg=20.0, max_p_seg=120.0, n_freqs=10000):
+   
     mask = ~np.isnan(time)
     if rate is not None:
         mask &= ~np.isnan(rate)
@@ -168,14 +160,12 @@ def calcular_funcao_janela(time, rate=None, min_p_seg=20.0, max_p_seg=120.0, n_f
     return freq_grid, power / np.max(power)
 
 
-def calcular_periodograma_dinamico(
+def periodograma_dinamico(
     time, rate, error=None, 
     limite_gap_seg=600, min_p_seg=20.0, max_p_seg=120.0, 
     n_freqs=10000, min_pontos=30
 ):
-    """
-    Gera a matriz 2D de potências (Frequência x GTI) para plotar espectrogramas/waterfalls.
-    """
+    
     segmentos = extrair_segmentos_gti(
         time, rate, error, limite_gap_seg=limite_gap_seg, min_pontos=min_pontos
     )
